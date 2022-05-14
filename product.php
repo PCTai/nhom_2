@@ -48,7 +48,7 @@ $res=mysqli_query($con,$sql);
 							   <td><?php echo $row['maSanPham']?></td>
 							   <td><?php echo $row['tenDanhMuc']?></td>
 							   <td><?php echo $row['tenSanPham']?></td>
-							   <td><?php echo $row['anh']?></td>
+							   <td><img src="<?php echo $row['anh']?>" alt=""></td>
 							   <td><?php echo $row['gia']?></td>
 							   <td><?php echo $row['soLuong']?></td>
 							   <td>

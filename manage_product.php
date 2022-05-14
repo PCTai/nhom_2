@@ -4,7 +4,6 @@ $categories_id='';
 $name='';
 $price='';
 $qty='';
-$image='';
 $config ='';
 $description	='';
 $supplier	='';
@@ -38,7 +37,6 @@ if(isset($_POST['submit'])){
 	$qty=get_safe_value($con,$_POST['qty']);
 	$config =get_safe_value($con,$_POST['config']);
 	$supplier =get_safe_value($con,$_POST['supplier']);
-	$image =get_safe_value($con,$_POST['image']);
 	$description=get_safe_value($con,$_POST['description']);
 	$res=mysqli_query($con,"select * from sanPham where tenSanPham='$name'");
 	$check=mysqli_num_rows($res);
@@ -70,18 +68,18 @@ if(isset($_POST['submit'])){
 	
 	if($msg==''){
 		if(isset($_GET['id']) && $_GET['id']!=''){
-			// if($_FILES['image']['name']!=''){
-			// 	$image=rand(111111111,999999999).'_'.$_FILES['image']['name'];
-			// 	move_uploaded_file($_FILES['image']['tmp_name'],PRODUCT_IMAGE_SERVER_PATH.$image);
-			// 	$update_sql="update product set categories_id='$categories_id',name='$name',mrp='$mrp',price='$price',qty='$qty',short_desc='$short_desc',description='$description',meta_title='$meta_title',meta_desc='$meta_desc',meta_keyword='$meta_keyword',image='$image' where id='$id'";
-			// }else{
-				$update_sql="update sanPham set maDanhMuc='$categories_id',tenSanPham='$name',gia='$price',soLuong='$qty',thongTinSanPham='$description',anh='$image' where maSanPham='$id'";
-			// }
+			if($_FILES['image']['name']!=''){
+				$image=$_FILES['image']['name'];
+				move_uploaded_file($_FILES['image']['tmp_name'],PRODUCT_IMAGE_SERVER_PATH.$image);
+				$update_sql="update sanPham set maDanhMuc='$categories_id',tenSanPham='$name',gia='$price',soLuong='$qty',thongTinSanPham='$description',anh='./images/products/$image' where maSanPham='$id'";
+			}else{
+				$update_sql="update sanPham set maDanhMuc='$categories_id',tenSanPham='$name',gia='$price',soLuong='$qty',thongTinSanPham='$description',anh='./images/products/$image' where maSanPham='$id'";
+			}
 			mysqli_query($con,$update_sql);
 		}else{
-		// 	$image=rand(111111111,999999999).'_'.$_FILES['image']['name'];
-		// 	move_uploaded_file($_FILES['image']['tmp_name'],PRODUCT_IMAGE_SERVER_PATH.$image);
-			mysqli_query($con,"insert into sanPham(maDanhMuc,tenSanPham,gia,soLuong,cauHinh,maNhaCungCap,thongTinSanPham,anh) values('$categories_id','$name','$price','$qty','$config','$supplier','$description','$image')");
+			$image=$_FILES['image']['name'];
+			move_uploaded_file($_FILES['image']['tmp_name'],PRODUCT_IMAGE_SERVER_PATH.$image);
+			mysqli_query($con,"insert into sanPham(maDanhMuc,tenSanPham,gia,soLuong,cauHinh,maNhaCungCap,thongTinSanPham,anh) values('$categories_id','$name','$price','$qty','$config','$supplier','$description','./images/products/$image')");
 		}
 		header('location:product.php');
 		die();
@@ -93,13 +91,12 @@ if(isset($_POST['submit'])){
                <div class="row">
                   <div class="col-lg-12">
                      <div class="card">
-                        <div class="card-header"><strong>Product</strong><small> Form</small></div>
+                        <div class="card-header"><strong>Sản Phẩm</div>
                         <form method="post" enctype="multipart/form-data">
 							<div class="card-body card-block">
 							   <div class="form-group">
 									<label for="categories" class=" form-control-label">Danh mục</label>
 									<select class="form-control" name="categories_id">
-										<option>Select Category</option>
 										<?php
 										$res=mysqli_query($con,"select * from DanhMuc order by maDanhMuc asc");
 										while($row=mysqli_fetch_assoc($res)){
@@ -114,9 +111,8 @@ if(isset($_POST['submit'])){
 									</select>
 								</div>
 								<div class="form-group">
-									<label for="categories" class=" form-control-label">NhaCungCap</label>
+									<label for="categories" class=" form-control-label">Nhà cung cấp</label>
 									<select class="form-control" name="supplier">
-										<option>Select Category</option>
 										<?php
 										$res=mysqli_query($con,"select * from NhaCungCap order by maNhaCungCap asc");
 										while($row=mysqli_fetch_assoc($res)){
@@ -131,7 +127,7 @@ if(isset($_POST['submit'])){
 									</select>
 								</div>
 								<div class="form-group">
-									<label for="categories" class=" form-control-label">Ten sản phẩm</label>
+									<label for="categories" class=" form-control-label">Tên sản phẩm</label>
 									<input type="text" name="name" placeholder="Nhập tên sản phẩm" class="form-control" required value="<?php echo $name?>">
 								</div>
 								
@@ -147,7 +143,7 @@ if(isset($_POST['submit'])){
 								
 								<div class="form-group">
 									<label for="categories" class=" form-control-label">Ảnh</label>
-									<input type="text" name="image" placeholder="Nhập anh" class="form-control" required value="<?php echo $image?>">
+									<input type="file" name="image" class="form-control" required value="<?php echo $image_required?>">
 								</div>
 								<div class="form-group">
 									<label for="categories" class=" form-control-label">Cấu hình</label>
@@ -159,11 +155,11 @@ if(isset($_POST['submit'])){
 									<textarea name="description" placeholder="Nhập thông tin sản phẩm" class="form-control" required><?php echo $description?></textarea>
 								</div>
 								
-								
 							   <button id="payment-button" name="submit" type="submit" class="btn btn-lg btn-info btn-block">
 							   <span id="payment-button-amount">Submit</span>
 							   </button>
 							   <div class="field_error"><?php echo $msg?></div>
+							   
 							</div>
 						</form>
                      </div>

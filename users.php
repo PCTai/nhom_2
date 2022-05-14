@@ -5,12 +5,14 @@ if(isset($_GET['type']) && $_GET['type']!=''){
 	$type=get_safe_value($con,$_GET['type']);
 	if($type=='delete'){
 		$id=get_safe_value($con,$_GET['id']);
-		$delete_sql="delete from users where id='$id'";
+		echo $type;
+		echo $id;
+		$delete_sql="delete from khachhang where maKhachHang='$id'";
 		mysqli_query($con,$delete_sql);
 	}
 }
 
-$sql="select * from khachHang order by maKhachHang desc";
+$sql="select * from khachhang order by maKhachHang desc";
 $res=mysqli_query($con,$sql);
 ?>
 <div class="content pb-0">
@@ -20,6 +22,8 @@ $res=mysqli_query($con,$sql);
 			 <div class="card">
 				<div class="card-body">
 				   <h4 class="box-title">Users </h4>
+				   <h4 class="box-link"><a href="manage_users.php">thêm</a> </h4>
+
 				</div>
 				<div class="card-body--">
 				   <div class="table-stats order-table ov-h">
